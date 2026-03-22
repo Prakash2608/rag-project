@@ -1,0 +1,8 @@
+.env
+rag_env/
+rag_env_2/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/

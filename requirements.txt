@@ -1,0 +1,46 @@
+# API
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+python-multipart==0.0.9
+
+# Auth
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# Database
+sqlalchemy[asyncio]==2.0.30
+asyncpg==0.29.0
+alembic==1.13.1
+
+# Cache / Queue
+redis==5.0.4
+celery==5.4.0
+flower==2.0.1
+
+# Storage
+boto3==1.34.0
+
+# RAG
+groq==0.9.0
+ollama==0.2.1
+qdrant-client==1.9.1
+tiktoken==0.7.0
+pdfplumber==0.11.0
+langchain-text-splitters==0.2.1
+
+# Logging & Monitoring
+structlog==24.2.0
+prometheus-client==0.20.0
+sentry-sdk[fastapi]==2.5.0
+
+# Config
+pydantic-settings==2.3.0
+python-dotenv==1.0.1
+
+# Auth
+python-jose[cryptography]==3.3.0
+bcrypt==4.0.1
+
+psycopg2-binary==2.9.9
+
+pytest
