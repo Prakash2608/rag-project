@@ -1,0 +1,70 @@
+name: RAG Project CI/CD
+
+on:
+  push:
+    branches: [main, develop, feature/**]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+
+  # ── CI: Run Tests ────────────────────────────────────────────────────────────
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest tests/ -v --tb=short
+
+  # ── CD: Deploy (only on merge to main) ───────────────────────────────────────
+  deploy:
+    name: Deploy to RunPod
+    runs-on: ubuntu-latest
+    needs: test                          # only runs if test job passes
+    if: github.ref == 'refs/heads/main' # only runs on main branch
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/rag-project:latest
+
+      - name: Deploy to RunPod
+        run: |
+          echo "Deploying to RunPod..."
+          curl -s --request POST \
+            --url https://api.runpod.io/v2/${{ secrets.RUNPOD_ENDPOINT_ID }}/run \
+            --header "Authorization: Bearer ${{ secrets.RUNPOD_API_KEY }}" \
+            --header "Content-Type: application/json" \
+            --data '{"input": {"action": "deploy"}}'
