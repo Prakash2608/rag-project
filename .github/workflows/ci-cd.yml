@@ -8,7 +8,6 @@ on:
 
 jobs:
 
-  # ── CI: Run Tests ──────────────────────────────────────────────
   test:
     name: Run Unit Tests
     runs-on: ubuntu-latest
