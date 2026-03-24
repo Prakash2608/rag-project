@@ -1,0 +1,353 @@
+═══════════════════════════════════════════════════════════════
+        RAG PROJECT — TECH STACK LEARNING GUIDE
+═══════════════════════════════════════════════════════════════
+
+This guide covers every technology used in the RAG project
+and what you should learn about each one.
+
+Suggested Learning Order:
+  1. Python basics
+  2. FastAPI
+  3. PostgreSQL + SQLAlchemy
+  4. Docker
+  5. Redis
+  6. Celery
+  7. LLMs + Embeddings
+  8. Qdrant
+  9. CI/CD (GitHub Actions)
+
+───────────────────────────────────────────────────────────────
+1. FASTAPI
+───────────────────────────────────────────────────────────────
+What it is:
+  Modern Python web framework for building APIs.
+  Used in this project as the main API layer.
+
+Must know:
+  - What is an API and HTTP methods (GET, POST, PUT, DELETE)
+  - Path parameters vs query parameters vs request body
+  - Pydantic models for request/response validation
+  - Dependency injection (Depends())
+  - Middleware and CORS
+  - lifespan context manager (startup/shutdown events)
+  - Async vs sync endpoints (async def vs def)
+  - Background tasks
+
+Resources:
+  - https://fastapi.tiangolo.com/tutorial/
+
+
+───────────────────────────────────────────────────────────────
+2. POSTGRESQL
+───────────────────────────────────────────────────────────────
+What it is:
+  Relational database. Stores users, documents, and metadata.
+  Hosted on Supabase in production.
+
+Must know:
+  - Tables, rows, columns, primary keys, foreign keys
+  - Basic SQL (SELECT, INSERT, UPDATE, DELETE)
+  - Joins (INNER, LEFT)
+  - Indexes and why they matter for performance
+  - Transactions (ACID properties)
+  - SQLAlchemy ORM — models, sessions, queries
+  - Alembic migrations — what they are and why needed
+  - asyncpg — async driver for non-blocking DB calls
+
+Resources:
+  - https://www.postgresql.org/docs/
+  - https://docs.sqlalchemy.org/
+
+
+───────────────────────────────────────────────────────────────
+3. REDIS
+───────────────────────────────────────────────────────────────
+What it is:
+  In-memory key-value store.
+  Used for caching (exact match + semantic) and Celery broker.
+  Hosted on Upstash in production.
+
+Must know:
+  - What is caching and why it matters
+  - Key-value concept (SET key value, GET key)
+  - TTL (Time To Live) — auto-expiring keys
+  - Redis as a message broker (pub/sub)
+  - Difference between cache hit and cache miss
+  - When to use Redis vs PostgreSQL
+
+Resources:
+  - https://redis.io/docs/
+
+
+───────────────────────────────────────────────────────────────
+4. QDRANT
+───────────────────────────────────────────────────────────────
+What it is:
+  Vector database. Stores embeddings for semantic search.
+  Hosted on Qdrant Cloud in production.
+
+Must know:
+  - What are vectors and embeddings
+  - How semantic search works vs keyword search
+  - Cosine similarity — how similarity is measured
+  - Collections, points, payloads in Qdrant
+  - score_threshold — filtering low quality results
+  - Difference between vector DB and relational DB
+  - Why RAG needs a vector DB
+
+Resources:
+  - https://qdrant.tech/documentation/
+
+
+───────────────────────────────────────────────────────────────
+5. MINIO / SUPABASE STORAGE
+───────────────────────────────────────────────────────────────
+What it is:
+  Object storage. Stores PDF files (like AWS S3).
+  MinIO used locally, Supabase Storage used in production.
+
+Must know:
+  - What is object storage vs file system vs database storage
+  - Buckets and objects concept
+  - S3-compatible API (PUT, GET, DELETE)
+  - Presigned URLs — temporary access links
+  - When to use object storage vs database for files
+
+Resources:
+  - https://min.io/docs/
+  - https://supabase.com/docs/guides/storage
+
+
+───────────────────────────────────────────────────────────────
+6. CELERY
+───────────────────────────────────────────────────────────────
+What it is:
+  Background task queue. Processes PDFs asynchronously
+  so the API doesn't block while embedding documents.
+
+Must know:
+  - What is a task queue and why needed
+  - Difference between sync and async processing
+  - Tasks, workers, brokers, backends
+  - .delay() vs .apply_async()
+  - Task states (PENDING, STARTED, SUCCESS, FAILURE)
+  - --pool=solo on Windows (multiprocessing limitation)
+  - Flower — monitoring Celery tasks via web UI
+
+Resources:
+  - https://docs.celeryq.dev/
+
+
+───────────────────────────────────────────────────────────────
+7. DOCKER
+───────────────────────────────────────────────────────────────
+What it is:
+  Containerization. Packages your app with all dependencies
+  so it runs the same everywhere (local, cloud, CI).
+
+Must know:
+  - What is a container vs a virtual machine
+  - Dockerfile — how to build an image
+  - docker-compose.yml — running multiple services together
+  - Images vs containers
+  - Volumes — persistent data storage
+  - Networks — how containers talk to each other
+  - Multi-stage builds — smaller production images
+  - Basic commands:
+      docker build .
+      docker run
+      docker compose up -d
+      docker compose down
+      docker ps
+      docker logs <container>
+
+Resources:
+  - https://docs.docker.com/get-started/
+
+
+───────────────────────────────────────────────────────────────
+8. GROQ / LLM
+───────────────────────────────────────────────────────────────
+What it is:
+  LLM API. Generates answers from retrieved context chunks.
+  Uses llama-4-scout model via Groq's fast inference API.
+
+Must know:
+  - What is an LLM (Large Language Model)
+  - Prompt engineering — system prompt vs user prompt
+  - Tokens — how LLMs measure text length
+  - Temperature — controls randomness of output
+  - Context window — max tokens an LLM can process
+  - Difference between Groq, Ollama, OpenAI
+  - RAG vs fine-tuning — when to use each
+
+Resources:
+  - https://console.groq.com/docs/
+  - https://platform.openai.com/docs/
+
+
+───────────────────────────────────────────────────────────────
+9. OLLAMA (EMBEDDINGS)
+───────────────────────────────────────────────────────────────
+What it is:
+  Local model runner. Generates embeddings for text chunks
+  using nomic-embed-text model.
+
+Must know:
+  - What are embeddings — text converted to float vectors
+  - Why nomic-embed-text is used (good quality, fast, local)
+  - Embedding dimensions — what they mean
+  - How embeddings enable semantic search
+  - Difference between embedding model and LLM
+  - Why we embed both documents AND questions
+
+Resources:
+  - https://ollama.com/library/nomic-embed-text
+
+
+───────────────────────────────────────────────────────────────
+10. STRUCTLOG
+───────────────────────────────────────────────────────────────
+What it is:
+  Structured logging library. Logs in key-value / JSON format
+  instead of plain text strings.
+
+Must know:
+  - Why structured logging over print()
+  - Log levels: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  - Key-value logging — easier to search and filter
+  - Log aggregation in production (Sentry, Datadog)
+  - How to read and interpret structured logs
+
+Resources:
+  - https://www.structlog.org/en/stable/
+
+
+───────────────────────────────────────────────────────────────
+11. PYDANTIC SETTINGS
+───────────────────────────────────────────────────────────────
+What it is:
+  Config management. Reads .env file with type validation.
+  Prevents wrong config values from reaching production.
+
+Must know:
+  - What are environment variables and why use them
+  - .env file — local config that never goes to Git
+  - Type validation — catches wrong config values early
+  - BaseSettings — how it reads from environment
+  - Difference between development and production config
+  - Why secrets should never be hardcoded in code
+
+Resources:
+  - https://docs.pydantic.dev/latest/concepts/pydantic_settings/
+
+
+───────────────────────────────────────────────────────────────
+12. GITHUB ACTIONS (CI/CD)
+───────────────────────────────────────────────────────────────
+What it is:
+  Automation platform. Runs tests on every push and deploys
+  to production when code is merged to main.
+
+Must know:
+  - What is CI (Continuous Integration)
+  - What is CD (Continuous Deployment)
+  - YAML syntax for workflows
+  - Jobs, steps, triggers (on: push, pull_request)
+  - Secrets — storing API keys safely in GitHub
+  - Branch protection rules
+  - Pull Request workflow (feature -> develop -> main)
+  - How to read workflow logs when tests fail
+
+Resources:
+  - https://docs.github.com/en/actions
+
+
+───────────────────────────────────────────────────────────────
+13. JWT AUTHENTICATION
+───────────────────────────────────────────────────────────────
+What it is:
+  JSON Web Tokens. Used to authenticate API requests
+  without storing session data on the server.
+
+Must know:
+  - What is authentication vs authorization
+  - How JWT works (header.payload.signature)
+  - Access tokens vs refresh tokens
+  - Token expiry and why it matters
+  - Bearer token — how it's sent in API requests
+  - bcrypt — secure password hashing
+  - Why never store plain text passwords
+
+Resources:
+  - https://jwt.io/introduction
+
+
+───────────────────────────────────────────────────────────────
+14. RAG PIPELINE (CORE CONCEPT)
+───────────────────────────────────────────────────────────────
+What it is:
+  Retrieval-Augmented Generation. The core architecture
+  of this entire project.
+
+Must know:
+  - What is RAG and why it's better than pure LLM
+  - Chunking — why we split documents into pieces
+  - Chunk size and overlap — how they affect accuracy
+  - Embedding — converting text to vectors
+  - Retrieval — finding relevant chunks via similarity
+  - Augmentation — adding context to the LLM prompt
+  - Generation — LLM produces answer from context
+  - Exact cache vs semantic cache — performance optimization
+  - Hallucination — what it is and how RAG reduces it
+
+Full RAG flow in this project:
+  Upload PDF
+    -> Store in Supabase Storage
+    -> Celery task: chunk text (1500 chars, 200 overlap)
+    -> Embed chunks with nomic-embed-text (Ollama)
+    -> Store embeddings in Qdrant
+    -> User asks question
+    -> Check exact cache (SHA256) -> return if hit
+    -> Check semantic cache (cosine >= 0.95) -> return if hit
+    -> Embed question
+    -> Retrieve top chunks from Qdrant (score >= 0.55)
+    -> Send chunks + question to Groq LLM
+    -> Return answer + store in cache
+
+Resources:
+  - https://arxiv.org/abs/2005.11401 (original RAG paper)
+
+
+═══════════════════════════════════════════════════════════════
+        QUICK REFERENCE — WHAT RUNS WHERE
+═══════════════════════════════════════════════════════════════
+
+  Local Development:
+    FastAPI     -> uvicorn app.main:app --reload
+    Celery      -> py -3.11 -m celery -A app.workers.celery_app worker --pool=solo
+    PostgreSQL  -> Docker (localhost:5432)
+    Redis       -> Docker (localhost:6379)
+    Qdrant      -> Docker (localhost:6333)
+    MinIO       -> Docker (localhost:9000)
+
+  Production (Cloud):
+    FastAPI     -> Render
+    PostgreSQL  -> Supabase
+    Redis       -> Upstash
+    Qdrant      -> Qdrant Cloud
+    Storage     -> Supabase Storage
+
+═══════════════════════════════════════════════════════════════
+        UNIT TESTS WRITTEN
+═══════════════════════════════════════════════════════════════
+
+  test_auth.py       -> 11 tests  (JWT, password hashing)
+  test_chunking.py   -> 16 tests  (text splitting)
+  test_caching.py    -> 28 tests  (exact + semantic cache)
+  test_llm_client.py -> 28 tests  (LLM provider switching)
+  test_config.py     -> 33 tests  (config loading)
+  ─────────────────────────────────────────────
+  Total              -> 116 tests, all passing
+
+═══════════════════════════════════════════════════════════════
