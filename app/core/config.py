@@ -8,6 +8,10 @@ class Settings(BaseSettings):
 
     # Database
     DATABASE_URL: str
+    
+    # Supabase Storage
+    SUPABASE_URL: str = ""
+    SUPABASE_SERVICE_KEY: str = ""
 
     # Redis
     REDIS_URL: str
