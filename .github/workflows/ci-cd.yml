@@ -8,6 +8,7 @@ on:
 
 jobs:
 
+  # ── CI: Run Tests ────────────────────────────────────────────────────────────
   test:
     name: Run Unit Tests
     runs-on: ubuntu-latest
@@ -35,5 +36,17 @@ jobs:
       - name: Run tests
         run: pytest tests/ -v --tb=short
 
-  # CD disabled until Render deploy hook is configured
-  # deploy:
+  # ── CD: Deploy (only on merge to main) ───────────────────────────────────────
+  deploy:
+    name: Deploy to Render
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Trigger Render Deploy
+        run: |
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
